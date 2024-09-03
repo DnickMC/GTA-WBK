@@ -42,33 +42,33 @@ TIC.AimingAnimStarted = false
 
 -- Add chat suggestions on client join
 AddEventHandler('onClientMapStart', function()
-    TriggerEvent('chat:addSuggestion', '/tic', 'Type an action.', {
-        { name = 'action', help = 'collect store' }
+    TriggerEvent('chat:addSuggestion', '/wbk', 'Gebe eine Aktion an.', {
+        { name = 'action', help = 'nehmen lagern' }
     })
 end)
 
 -- Command to store and collect a TIC from an approved vehicle
-RegisterCommand("tic", function(_, Args)
+RegisterCommand("wbk", function(_, Args)
     if Args[1] then
         local Action = Args[1]:lower()
 
-        if Action == "collect" then
+        if Action == "nehmen" then
             if not TIC.Using then
                 if TruckTest() then collectTIC() end
             else
-                NewNotification("~y~You already carrying a TIC!", true)
+                NewNotification("~y~Du trägst bereits eine Wärmebildkamera bei dir!", true)
             end
-        elseif Action == "store" then
+        elseif Action == "lagern" then
             if TIC.Using then
                 if TruckTest() then storeTIC() end
             else
-                NewNotification("~y~You do not have a TIC out!", true)
+                NewNotification("~y~Du hast keine Wärmebildkamera!", true)
             end
         else
-            NewNotification("~r~Invalid action! Use: 'collect' or 'store'.", true)
+            NewNotification("~r~Invalid action! Use: 'nehmen' or 'lagern'.", true)
         end
     else
-        NewNotification("~r~No action specified!", true)
+        NewNotification("~r~Keine Aktion angegeben!", true)
     end
 end)
 
@@ -101,10 +101,10 @@ function TruckTest()
     if Vdist(PlayerCoords.x, PlayerCoords.y, PlayerCoords.z, RayCoords.x, RayCoords.y, RayCoords.z) < 3 then
         for _, Vehicle in ipairs(Config.Vehicles) do if GetHashKey(Vehicle) == GetEntityModel(RayEntity) then return true end end
 
-        NewNotification("~r~This vehicle does not carry TICs!", true)
+        NewNotification("~r~Das Fahrzeug hat keine Wärmebildkamera!", true)
         return false
     else
-        NewNotification("~r~No TIC carrying vehicle found!", true)
+        NewNotification("~r~Kein Wärmebildkamera tragenes Fahrzeug gefunden!", true)
         return false
     end
 end
@@ -136,7 +136,7 @@ Citizen.CreateThread(function()
             local PlayerPed = PlayerPedId()
 
             if not TIC.Active then
-                NewHint("~INPUT_ATTACK~ Activate TIC\n~INPUT_AIM~ Aim TIC")
+                NewHint("~INPUT_ATTACK~ Aktivieren TIC\n~INPUT_AIM~ Anvisieren")
 
                 if TIC.AnimStarted then
                     TIC.AnimStarted = false
@@ -156,7 +156,7 @@ Citizen.CreateThread(function()
 
                 SetCurrentPedWeapon(PlayerPed, -1569615261, true) -- Unarmed
             else
-                NewHint("~INPUT_AIM~ Deactivate TIC\n~INPUT_CELLPHONE_UP~/~INPUT_CELLPHONE_DOWN~ Adjust Sensitivity")
+                NewHint("~INPUT_AIM~ Deaktivieren TIC\n~INPUT_CELLPHONE_UP~/~INPUT_CELLPHONE_DOWN~ Empfindlichkeit ändern")
 
                 if not TIC.AnimStarted or TIC.AimingAnimStarted then
                     TIC.AnimStarted = true
